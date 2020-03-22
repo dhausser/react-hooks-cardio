@@ -1,5 +1,6 @@
 import React from 'react';
 import ThemeContext, { themes } from './Context';
+import { FilterStateProvider } from './LocalState';
 import Filters from './Filters';
 import Counter from './Counter';
 import styled from 'styled-components';
@@ -17,8 +18,10 @@ function App() {
   return (
     <Layout>
       <ThemeContext.Provider value={themes.dark}>
-        <Filters />
-        <Counter />
+        <FilterStateProvider>
+          <Filters />
+          <Counter />
+        </FilterStateProvider>
       </ThemeContext.Provider>
     </Layout>
   );

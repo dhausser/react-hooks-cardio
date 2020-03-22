@@ -1,7 +1,8 @@
-import React, { useReducer } from "react";
+import React from "react";
 import styled from "styled-components";
 import Select from "react-select";
-import data from "./data.json";
+import { useFilter } from "./LocalState";
+import data from "../data.json";
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,35 +13,8 @@ const Content = styled.div`
   margin: 10px;
 `;
 
-const initialState = {
-  project: { value: "", label: "" },
-  version: { value: "", label: "" },
-  team: { value: "", label: "" }
-};
-
-function reducer(state, action) {
-  if (!action.option) {
-    return initialState;
-  }
-
-  const { value, label } = action.option;
-
-  switch (action.type) {
-    case "project":
-      return { ...initialState, project: { value, label } };
-    case "version":
-      return { ...state, version: { value, label } };
-    case "team":
-      return { ...state, team: { value, label } };
-    case "reset":
-      return initialState;
-    default:
-      throw new Error();
-  }
-}
-
 export default function Filters() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { state, setProject, setVersion, setTeam } = useFilter();
 
   const projects = data.projects.map(({ id, name }) => ({
     value: id,
@@ -52,10 +26,6 @@ export default function Filters() {
   }));
   const teams = data.projects[0].teams.map(value => ({ value, label: value }));
 
-  // const defaultProject = projects[0];
-  // const defaultVersion = versions[0];
-  // const defaultTeam = teams[0];
-
   return (
     <div>
       <Wrapper>
@@ -63,7 +33,8 @@ export default function Filters() {
           <Select
             options={projects}
             isClearable
-            onChange={e => dispatch({ type: "project", option: e })}
+            onChange={setProject}
+            // onChange={e => setProject(e)}
           />
         </Content>
         <Content>
@@ -71,7 +42,8 @@ export default function Filters() {
             options={versions}
             value={state?.version}
             isClearable
-            onChange={e => dispatch({ type: "version", option: e })}
+            onChange={setVersion}
+            // onChange={e => setVersion(e)}
           />
         </Content>
         <Content>
@@ -79,7 +51,8 @@ export default function Filters() {
             options={teams}
             value={state?.team}
             isClearable
-            onChange={e => dispatch({ type: "team", option: e })}
+            onChange={setTeam}
+            // onChange={e => setTeam(e)}
           />
         </Content>
       </Wrapper>
