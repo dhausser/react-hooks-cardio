@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 import data from "./data.json";
@@ -12,13 +12,26 @@ const Content = styled.div`
   margin: 10px;
 `;
 
-const initialState = { value: "", label: "" };
+const initialState = {
+  project: { value: "", label: "" },
+  version: { value: "", label: "" },
+  team: { value: "", label: "" }
+};
 
 function reducer(state, action) {
-  console.log(state, action);
+  if (!action.option) {
+    return initialState;
+  }
+
+  const { value, label } = action.option;
+
   switch (action.type) {
-    case "set":
-      return { value: "hello", label: "world" };
+    case "project":
+      return { ...initialState, project: { value, label } };
+    case "version":
+      return { ...state, version: { value, label } };
+    case "team":
+      return { ...state, team: { value, label } };
     case "reset":
       return initialState;
     default:
@@ -27,10 +40,6 @@ function reducer(state, action) {
 }
 
 export default function Filters() {
-  const [project, setProject] = useState();
-  const [version, setVersion] = useState();
-  const [team, setTeam] = useState();
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const projects = data.projects.map(({ id, name }) => ({
@@ -43,9 +52,9 @@ export default function Filters() {
   }));
   const teams = data.projects[0].teams.map(value => ({ value, label: value }));
 
-  const defaultProject = projects[0];
-  const defaultVersion = versions[0];
-  const defaultTeam = teams[0];
+  // const defaultProject = projects[0];
+  // const defaultVersion = versions[0];
+  // const defaultTeam = teams[0];
 
   return (
     <div>
@@ -53,34 +62,32 @@ export default function Filters() {
         <Content>
           <Select
             options={projects}
-            defaultValue={defaultProject}
             isClearable
-            onChange={e => {
-              setProject(e.label);
-              dispatch({ type: "set" });
-            }}
+            onChange={e => dispatch({ type: "project", option: e })}
           />
         </Content>
         <Content>
           <Select
             options={versions}
-            defaultValue={defaultVersion}
-            onChange={e => setVersion(e.value)}
+            value={state?.version}
+            isClearable
+            onChange={e => dispatch({ type: "version", option: e })}
           />
         </Content>
         <Content>
           <Select
             options={teams}
-            defaultValue={defaultTeam}
-            onChange={e => setTeam(e.value)}
+            value={state?.team}
+            isClearable
+            onChange={e => dispatch({ type: "team", option: e })}
           />
         </Content>
       </Wrapper>
       <ul>
         <li>State: {JSON.stringify(state)}</li>
-        <li>Project: {project}</li>
-        <li>Version: {version}</li>
-        <li>Team: {team}</li>
+        <li>Project: {state.project.label}</li>
+        <li>Version: {state.version.label}</li>
+        <li>Team: {state.team.label}</li>
       </ul>
     </div>
   );
