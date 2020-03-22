@@ -1,0 +1,28 @@
+{
+  "projects": [
+    {
+      "id": "0",
+      "name": "Star Wars",
+      "versions": ["1.0", "2.0", "3.0"],
+      "teams": ["Alpha", "Beta"]
+    },
+    {
+      "id": "1",
+      "name": "The Empire",
+      "versions": ["1.0", "2.0", "3.0"],
+      "teams": ["Alpha", "Beta"]
+    },
+    {
+      "id": "2",
+      "name": "Call of Duty",
+      "versions": ["1.0", "2.0", "3.0"],
+      "teams": ["Alpha", "Beta"]
+    },
+    {
+      "id": "3",
+      "name": "Battlefield",
+      "versions": ["1.0", "2.0", "3.0"],
+      "teams": ["Alpha", "Beta"]
+    }
+  ]
+}
