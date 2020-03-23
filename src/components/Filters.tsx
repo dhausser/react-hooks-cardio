@@ -57,10 +57,9 @@ export default function Filters() {
         </Content>
       </Wrapper>
       <ul>
-        <li>State: {JSON.stringify(state)}</li>
-        <li>Project: {state.project.label}</li>
-        <li>Version: {state.version.label}</li>
-        <li>Team: {state.team.label}</li>
+        <li>Project: {state?.project?.label}</li>
+        <li>Version: {state?.version?.label}</li>
+        <li>Team: {state?.team?.label}</li>
       </ul>
     </div>
   );
