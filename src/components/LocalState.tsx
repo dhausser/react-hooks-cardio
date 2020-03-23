@@ -44,6 +44,17 @@ const defaultValues: FilterContext = {
 const LocalStateContext = React.createContext(defaultValues);
 const LocalStateProvider = LocalStateContext.Provider;
 
+// The Type Guard Functions
+// function isProjectAction(action: Action): action is Action {
+//   return action.type === 'project'
+// }
+// function isVersionAction(action: Action): action is Action {
+//   return action.type === 'version'
+// }
+// function isTeamAction(action: Action): action is Action {
+//   return action.type === 'team'
+// }
+
 function reducer(state: FilterState, action: Action) {
   if (!action.option) {
     return initialState;
@@ -52,6 +63,17 @@ function reducer(state: FilterState, action: Action) {
   // const { value, label } = action.option;
   const value = action.option;
   const label = action.option;
+
+  // if (isProjectAction(action)) {
+  //   return { ...initialState, project: { value, label } };
+  // }
+  // if (isVersionAction(action)) {
+  //   return { ...state, version: { value, label } };
+  // }
+  // if (isTeamAction(action)) {
+  //   return { ...state, team: { value, label } };
+  // }
+  // throw new Error();
 
   switch (action.type) {
     case "project":
