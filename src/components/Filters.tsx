@@ -1,6 +1,7 @@
 import React from "react";
-import styled from "styled-components";
 import Select from "react-select";
+import styled from "styled-components";
+
 import { useFilter } from "./LocalState";
 import data from "../data.json";
 
@@ -13,7 +14,7 @@ const Content = styled.div`
   margin: 10px;
 `;
 
-export default function Filters() {
+function Filters() {
   const { state, setProject, setVersion, setTeam } = useFilter();
 
   const projects = data.projects.map(({ id, name }) => ({
@@ -32,9 +33,9 @@ export default function Filters() {
         <Content>
           <Select
             options={projects}
+            value={state?.project}
             isClearable
             onChange={setProject}
-            // onChange={e => setProject(e)}
           />
         </Content>
         <Content>
@@ -43,7 +44,6 @@ export default function Filters() {
             value={state?.version}
             isClearable
             onChange={setVersion}
-            // onChange={e => setVersion(e)}
           />
         </Content>
         <Content>
@@ -52,15 +52,12 @@ export default function Filters() {
             value={state?.team}
             isClearable
             onChange={setTeam}
-            // onChange={e => setTeam(e)}
           />
         </Content>
       </Wrapper>
-      <ul>
-        <li>Project: {state?.project?.label}</li>
-        <li>Version: {state?.version?.label}</li>
-        <li>Team: {state?.team?.label}</li>
-      </ul>
+      <p>{JSON.stringify(state)}</p>
     </div>
   );
 }
+
+export default Filters;

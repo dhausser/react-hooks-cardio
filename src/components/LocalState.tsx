@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, FunctionComponent } from "react";
 import { ValueType, ActionMeta } from "react-select";
 
 interface OptionType {
@@ -6,23 +6,20 @@ interface OptionType {
   label: string
 }
 
-interface FilterState {
-  project: OptionType | null
-  version: OptionType | null
-  team: OptionType | null
-}
+type AppState = {
+  project: ValueType<OptionType>  | null
+  version: ValueType<OptionType>  | null
+  team: ValueType<OptionType>  | null
+};
 
-interface Action {
-  type: string
-  option: ValueType<{ value: string; label: string }>
-}
-
-interface Props {
-  children: React.ReactNode
-}
+type Action =
+  | { type: "SET_PROJECT"; payload: ValueType<OptionType> }
+  | { type: "SET_VERSION"; payload: ValueType<OptionType> }
+  | { type: "SET_TEAM"; payload: ValueType<OptionType> }
+  | { type: "RESET"; payload: ValueType<OptionType> };
 
 interface FilterContext {
-  state: FilterState
+  state: AppState
   setProject: (value: ValueType<OptionType>, action: ActionMeta) => void
   setVersion: (value: ValueType<OptionType>, action: ActionMeta) => void
   setTeam: (value: ValueType<OptionType>, action: ActionMeta) => void
@@ -44,64 +41,41 @@ const defaultValues: FilterContext = {
 const LocalStateContext = React.createContext(defaultValues);
 const LocalStateProvider = LocalStateContext.Provider;
 
-// The Type Guard Functions
-// function isProjectAction(action: Action): action is Action {
-//   return action.type === 'project'
-// }
-// function isVersionAction(action: Action): action is Action {
-//   return action.type === 'version'
-// }
-// function isTeamAction(action: Action): action is Action {
-//   return action.type === 'team'
-// }
-
-function reducer(state: FilterState, action: Action) {
-  if (!action.option) {
+function reducer(state: AppState, action: Action): AppState {
+  if (!action.payload) {
     return initialState;
   }
 
-  // const { value, label } = action.option;
-  const value = action.option;
-  const label = action.option;
-
-  // if (isProjectAction(action)) {
-  //   return { ...initialState, project: { value, label } };
-  // }
-  // if (isVersionAction(action)) {
-  //   return { ...state, version: { value, label } };
-  // }
-  // if (isTeamAction(action)) {
-  //   return { ...state, team: { value, label } };
-  // }
-  // throw new Error();
-
   switch (action.type) {
-    case "project":
-      return { ...initialState, project: { value, label } };
-    case "version":
-      return { ...state, version: { value, label } };
-    case "team":
-      return { ...state, team: { value, label } };
-    case "reset":
-      return initialState;
+    case "SET_PROJECT":
+      return { ...initialState, project: action.payload };
+    case "SET_VERSION":
+      return { ...state, version: action.payload };
+    case "SET_TEAM":
+      return { ...state, team: action.payload };
     default:
-      throw new Error();
+      return state;
+
+    // case "RESET":
+    //   return initialState;
+    // default:
+    //   throw new Error();
   }
 }
 
-function FilterStateProvider({ children }: Props) {
+const FilterStateProvider: FunctionComponent = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   function setProject(value: ValueType<OptionType>, action: ActionMeta) {
-    dispatch({ type: "project", option: value });
+    dispatch({ type: "SET_PROJECT", payload: value });
   }
 
   function setVersion(value: ValueType<OptionType>, action: ActionMeta) {
-    dispatch({ type: "version", option: value });
+    dispatch({ type: "SET_VERSION", payload: value });
   }
 
   function setTeam(value: ValueType<OptionType>, action: ActionMeta) {
-    dispatch({ type: "team", option: value });
+    dispatch({ type: "SET_TEAM", payload: value });
   }
 
   return (
