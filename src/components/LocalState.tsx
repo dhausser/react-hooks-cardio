@@ -1,31 +1,8 @@
 import React, { useReducer, useContext, FunctionComponent } from "react";
-import { ValueType, ActionMeta } from "react-select";
+import { ValueType } from "react-select";
+import { AppState, FilterContext, OptionType, Action } from './LocalStateTypes';
 
-interface OptionType {
-  value: string
-  label: string
-}
-
-type AppState = {
-  project: ValueType<OptionType>  | null
-  version: ValueType<OptionType>  | null
-  team: ValueType<OptionType>  | null
-};
-
-type Action =
-  | { type: "SET_PROJECT"; payload: ValueType<OptionType> }
-  | { type: "SET_VERSION"; payload: ValueType<OptionType> }
-  | { type: "SET_TEAM"; payload: ValueType<OptionType> }
-  | { type: "RESET"; payload: ValueType<OptionType> };
-
-interface FilterContext {
-  state: AppState
-  setProject: (value: ValueType<OptionType>, action: ActionMeta) => void
-  setVersion: (value: ValueType<OptionType>, action: ActionMeta) => void
-  setTeam: (value: ValueType<OptionType>, action: ActionMeta) => void
-}
-
-const initialState = {
+const initialState: AppState = {
   project: null,
   version: null,
   team: null
@@ -33,9 +10,9 @@ const initialState = {
 
 const defaultValues: FilterContext = {
   state: initialState,
-  setProject: (value: ValueType<OptionType>, action: ActionMeta) => { console.log(value) },
-  setVersion: (value: ValueType<OptionType>, action: ActionMeta) => { console.log(value) },
-  setTeam: (value: ValueType<OptionType>, action: ActionMeta) => { console.log(value) },
+  setProject: (value: ValueType<OptionType>) => { console.log(value) },
+  setVersion: (value: ValueType<OptionType>) => { console.log(value) },
+  setTeam: (value: ValueType<OptionType>) => { console.log(value) },
 }
 
 const LocalStateContext = React.createContext(defaultValues);
@@ -55,7 +32,6 @@ function reducer(state: AppState, action: Action): AppState {
       return { ...state, team: action.payload };
     default:
       return state;
-
     // case "RESET":
     //   return initialState;
     // default:
@@ -66,15 +42,15 @@ function reducer(state: AppState, action: Action): AppState {
 const FilterStateProvider: FunctionComponent = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function setProject(value: ValueType<OptionType>, action: ActionMeta) {
+  function setProject(value: ValueType<OptionType>) {
     dispatch({ type: "SET_PROJECT", payload: value });
   }
 
-  function setVersion(value: ValueType<OptionType>, action: ActionMeta) {
+  function setVersion(value: ValueType<OptionType>) {
     dispatch({ type: "SET_VERSION", payload: value });
   }
 
-  function setTeam(value: ValueType<OptionType>, action: ActionMeta) {
+  function setTeam(value: ValueType<OptionType>) {
     dispatch({ type: "SET_TEAM", payload: value });
   }
 
